@@ -12,7 +12,7 @@ __global__ void hello()
 int main(int argc,char **argv)
 {
     // launch the kernel
-    hello<<<NUM_BLOCKS, BLOCK_WIDTH>>>();
+    hello<<<dim3(NUM_BLOCKS, 1, 1), dim3(BLOCK_WIDTH, 1, 1)>>>();
 
     // force the printf()s to flush
     cudaDeviceSynchronize();
