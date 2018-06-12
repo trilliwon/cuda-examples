@@ -65,6 +65,7 @@ int main(int argc, char **argv) {
 
     // set thread, block dimensions
     const dim3 block_size(TILE_WIDTH, TILE_WIDTH);
+    printf("block size: %d %d\n", block_size.x, block_size.y);
     const dim3 num_of_maxpool_blocks(maxpool_output_size/block_size.x+1, maxpool_output_size/block_size.y+1);
     const dim3 num_of_blocks(input_size/block_size.x+1, input_size/block_size.y+1);
 
