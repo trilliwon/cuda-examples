@@ -18,10 +18,18 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
 
     int col = blockDim.x * blockIdx.x + threadIdx.x;
     int row = blockDim.y * blockIdx.y + threadIdx.y;
+    
+    // TODO: out of bound
+    // filter
+    int max_val = input[(col * filter_size) + (row * filter_size * input_size)];
 
-    // out of bound
-    output[col+row*(input_size/filter_size)] = col+row*(input_size/filter_size);
-    // CHANGE
+    for (int i = row * filter_size; i < filter_size; i++) {
+        for (int j = col * filter_size; j < filter_size; j++) {
+            max_val = max(max_val, input[j + (i * input_size)]);
+        }
+    }
+    // assign max value
+    output[col + (row * (input_size / filter_size))] = max_val;
 }
 
 int main(int argc, char **argv) {
