@@ -91,9 +91,9 @@ int main(int argc, char **argv) {
     }
 
     float maxpool_input[input_size*input_size];
-    float a[input_size*input_size] = new float[input_size*input_size];
-    float b[input_size*input_size] = new float[input_size*input_size];
-    float c[input_size*input_size] = new float[input_size*input_size];
+    float* a = new float[input_size*input_size];
+    float* b = new float[input_size*input_size];
+    float* c = new float[input_size*input_size];
     
     // read input matrices 
     ifstream input_in(MAXPOOL_INPUT_FILENAME);
