@@ -23,16 +23,18 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
     // 2D to 1D : (row, col) -> (row * N) + col
     int index = ((row * filter_size) * input_size) + (col * filter_size);
     float max_val = input[index];
-    int output_index = (row * (input_size / filter_size)) + col;
+
     int counter = 0;
     for (int i = row * filter_size; i < row * filter_size + filter_size; i++) {
         for (int j = col * filter_size; j < col * filter_size + filter_size; j++) {
-            counter ++;
-            output[output_index] = fmaxf(output[output_index], input[(i * input_size) + j]);
+            index = (i * input_size) + j;
+            max_val = fmaxf(max_val, input[index]);
+            counter ++ ;
         }
     }
-    printf("filter_size : %d\n", counter);
+    printf("filter size: %d\n", counter);
     // assign max value
+    output[(row * (input_size / filter_size)) + col] = max_val;
 }
 
 int main(int argc, char **argv) {
