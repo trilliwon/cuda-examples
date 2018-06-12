@@ -23,10 +23,10 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
     // filter
     int index = (col * filter_size) + (row * filter_size * input_size);
     for (int k = 0; k < input_size * input_size; k++) {
-        if(k%input_size==0) cout<<"\n";
-        cout << input[k] << " ";
+        if(k%input_size==0) printf("\n");
+        printf("%f ",input[k]);
     }
-    cout << endl;
+    printf("%d")
     float max_val = input[index];
 
     for (int i = row * filter_size; i < filter_size; i++) {
