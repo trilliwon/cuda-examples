@@ -8,6 +8,7 @@
 #define MAXPOOL_INPUT_FILENAME "input.txt"
 
 using namespace std;
+int counter = 0;
 
 __global__ void maxpool(float *input, float *output, const int input_size, const int filter_size) {
     // input : input_matrix address
@@ -21,17 +22,17 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
     
     // TODO: out of bound
     // 2D to 1D : (row, col) -> (row * N) + col
-    float max_val = input[((row * filter_size) * input_size) + (col * filter_size)];
+    
     for (int i = row * filter_size; i < row * filter_size + filter_size; i++) {
         for (int j = col * filter_size; j < col * filter_size + filter_size; j++) {
             int index = (i * input_size) + j;
             if (index < input_size * input_size) {
-                output[(row * (input_size / filter_size)) + col] = fmaxf(output[(row * (input_size / filter_size)) + col], input[]);
+                output[(row * (input_size / filter_size)) + col] = fmaxf(output[(row * (input_size / filter_size)) + col], input[index]);
             }
+            atomicAdd(counter, 1);
         }
     }
     printf("filter size : %d\n", counter);
-    // assign max value
 }
 
 int main(int argc, char **argv) {
