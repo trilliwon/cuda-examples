@@ -22,20 +22,14 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
     // TODO: out of bound
     // filter
     int index = (col * filter_size) + (row * filter_size * input_size);
-    for (int k = 0; k < (input_size * input_size); k++) {
-        if(k % input_size == 0) printf("\n");
-        printf("%.1f ", input[k]);
-    }
-    
     float max_val = input[index];
+    printf("max value : %.1f\n", max_val);
 
     for (int i = row * filter_size; i < filter_size; i++) {
         for (int j = col * filter_size; j < filter_size; j++) {
             index = j + (i * input_size);
             max_val = max(max_val, input[index]);
-            printf("max_val: %d\n", max_val);
         }
-        printf("%d\n");
     }
     // assign max value
     output[col + (row * (input_size / filter_size))] = max_val;
