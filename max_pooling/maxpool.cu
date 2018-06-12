@@ -26,13 +26,13 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
         printf("%f ", input[k]);
     }
     printf("\n");
-    if (index >= (input_size * input_size)) { return; }
+    if (index >= input_size) { return; }
     float max_val = input[index];
 
     for (int i = row * filter_size; i < filter_size; i++) {
         for (int j = col * filter_size; j < filter_size; j++) {
             index = j + (i * input_size);
-            if (index >= (input_size * input_size)) { return; }
+            if (index >= input_size) { return; }
             max_val = max(max_val, input[index]);
             printf("max_val: %d\n", max_val);
         }
