@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    float maxpool_input[input_size*input_size] = new maxpool_input[input_size*input_size];
+    float* maxpool_input = new float[input_size*input_size];
     
     // read input matrices 
     ifstream input_in(MAXPOOL_INPUT_FILENAME);
