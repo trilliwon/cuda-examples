@@ -32,6 +32,7 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
             max_val = fmaxf(max_val, input[(i * input_size) + j]);
         }
     }
+
     // assign max value
     output[(row * output_size) + col] = max_val;
 }
