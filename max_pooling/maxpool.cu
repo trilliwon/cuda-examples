@@ -77,6 +77,8 @@ int main(int argc, char **argv) {
     }
     cout<<'\n';
 
+    printf("maxpool_input size : %d\n", sizeof(maxpool_input));
+    
     // set thread, block dimensions
     const dim3 block_size(TILE_WIDTH, TILE_WIDTH);
     const dim3 num_of_maxpool_blocks(maxpool_output_size/block_size.x+1, maxpool_output_size/block_size.y+1);
