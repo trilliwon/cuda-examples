@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    float* maxpool_input = new float[input_size*input_size];
+    float* maxpool_input = (float *) malloc(sizeof(float) * input_size * input_size);
     
     // read input matrices 
     ifstream input_in(MAXPOOL_INPUT_FILENAME);
@@ -88,11 +88,8 @@ int main(int argc, char **argv) {
     cudaMalloc(&dev_mem_input, sizeof(float) * input_size * input_size);
     cudaMalloc(&maxpool_output, sizeof(float) * maxpool_output_size * maxpool_output_size);
 
-    printf("dev_mem_input size : %d\n", sizeof(dev_mem_input));
-    
     // copy variable to device memory
     cudaMemcpy(dev_mem_input, maxpool_input, sizeof(float) * input_size * input_size, cudaMemcpyHostToDevice);
-    printf("last val: %f\n", dev_mem_input[input_size * input_size - 1]);
     cudaError_t error = cudaGetLastError();
  
     // launch CUDA kernels
