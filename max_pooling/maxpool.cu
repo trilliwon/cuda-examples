@@ -21,7 +21,11 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
     
     // TODO: out of bound
     // filter
-    float max_val = input[(col * filter_size) + (row * filter_size * input_size)];
+    int index = (col * filter_size) + (row * filter_size * input_size);
+    if (index >= input_size) {
+        return;
+    }
+    float max_val = input[index];
 
     for (int i = row * filter_size; i < filter_size; i++) {
         for (int j = col * filter_size; j < filter_size; j++) {
