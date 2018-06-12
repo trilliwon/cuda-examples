@@ -29,7 +29,7 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
             if (index < input_size * input_size) {
                 output[(row * (input_size / filter_size)) + col] = fmaxf(output[(row * (input_size / filter_size)) + col], input[index]);
             }
-            atomicAdd(counter, 1);
+            atomicAdd(&counter, 1);
         }
     }
     printf("filter size : %d\n", counter);
