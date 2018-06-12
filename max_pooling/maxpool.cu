@@ -18,6 +18,8 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
 
     int col = blockDim.x * blockIdx.x + threadIdx.x;
     int row = blockDim.y * blockIdx.y + threadIdx.y;
+    printf("Hello world! I'm a thread in block %d\n", blockIdx.x);
+    printf("Hello world! I'm thread %d\n", threadIdx.x);
 
     // out of bound
 
