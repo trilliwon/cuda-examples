@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
     cudaMalloc(&maxpool_output, sizeof(float) * maxpool_output_size * maxpool_output_size);
 
     // copy variable to device memory
-    cudaMemcpy(dev_mem_input, maxpool_input, sizeof(float) * input_size * input_size, cudaMemcpyHostToDevice);
+    cudaMemcpy(dev_mem_input, &maxpool_input, sizeof(float) * input_size * input_size, cudaMemcpyHostToDevice);
 
     cudaError_t error = cudaGetLastError();
  
