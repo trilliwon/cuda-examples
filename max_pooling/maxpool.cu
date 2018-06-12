@@ -29,8 +29,8 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
     for (int i = row * filter_size; i < row * filter_size + filter_size; i++) {
         for (int j = col * filter_size; j < col * filter_size + filter_size; j++) {
             index = j + (i * input_size);
-            printf("%d, %d ", i, j);
-            // max_val = max(max_val, input[index]);
+            printf("%d, %d \n", i, j);
+            max_val = max(max_val, input[index]);
         }
         printf("\n");
     }
