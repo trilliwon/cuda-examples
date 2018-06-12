@@ -83,6 +83,7 @@ int main(int argc, char **argv) {
 
     // memory allocation for the device
     float *dev_mem_input, *maxpool_output;
+    cudaMalloc(&dev_mem_input, sizeof(float) * input_size * input_size);
     cudaMalloc(&maxpool_output, sizeof(float) * maxpool_output_size * maxpool_output_size);
 
     // copy variable to device memory
@@ -92,8 +93,6 @@ int main(int argc, char **argv) {
  
     // launch CUDA kernels
     // Then run maxpooling
-    printf("grid : %d %d\n", num_of_maxpool_blocks.x, num_of_maxpool_blocks.y);
-    printf("block : %d %d\n", block_size.x, block_size.y);
     maxpool<<<num_of_maxpool_blocks, block_size>>>(dev_mem_input, maxpool_output, input_size, filter_size);
     cudaDeviceSynchronize();
     error = cudaGetLastError();
