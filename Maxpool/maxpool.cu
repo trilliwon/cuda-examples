@@ -74,6 +74,8 @@ int main(int argc, char **argv) {
     // copy variable to device memory
     cudaMemcpy(dev_mem_input, maxpool_input, sizeof(float) * input_size * input_size, cudaMemcpyHostToDevice);
 
+    cudaError_t error = cudaGetLastError();
+ 
     // launch CUDA kernels
     // Then run maxpooling
     maxpool<<<num_of_maxpool_blocks, block_size>>>(dev_mem_input, maxpool_output, input_size, filter_size);
