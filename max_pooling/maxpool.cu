@@ -18,7 +18,6 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
 
     int col = blockDim.x * blockIdx.x + threadIdx.x;
     int row = blockDim.y * blockIdx.y + threadIdx.y;
-    printf("row : %d, col : %d\n", row, col);
 
     // out of bound
 
@@ -65,7 +64,6 @@ int main(int argc, char **argv) {
 
     // set thread, block dimensions
     const dim3 block_size(TILE_WIDTH, TILE_WIDTH);
-    printf("block size: %d %d\n", block_size.x, block_size.y);
     const dim3 num_of_maxpool_blocks(maxpool_output_size/block_size.x+1, maxpool_output_size/block_size.y+1);
     const dim3 num_of_blocks(input_size/block_size.x+1, input_size/block_size.y+1);
 
@@ -80,6 +78,8 @@ int main(int argc, char **argv) {
  
     // launch CUDA kernels
     // Then run maxpooling
+    printf("grid : %d %d\n", num_of_maxpool_blocks.x, num_of_maxpool_blocks.y);
+    printf("block : %d %d\n", num_of_blocks.x, num_of_blocks.y);
     maxpool<<<num_of_maxpool_blocks, block_size>>>(dev_mem_input, maxpool_output, input_size, filter_size);
     cudaDeviceSynchronize();
     error = cudaGetLastError();
