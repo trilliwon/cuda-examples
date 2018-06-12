@@ -33,7 +33,7 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
             max_val = max(max_val, input[index]);
             printf("max_val: %d\n", max_val);
         }
-        printf("%d\n";)
+        printf("%d\n");
     }
     // assign max value
     output[col + (row * (input_size / filter_size))] = max_val;
