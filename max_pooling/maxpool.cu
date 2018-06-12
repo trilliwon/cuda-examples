@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
     cout<<'\n';
 
     printf("maxpool_input size : %d\n", sizeof(maxpool_input));
-    
+    printf("last val i: %f\n", maxpool_input[input_size * input_size - 1]);
     // set thread, block dimensions
     const dim3 block_size(TILE_WIDTH, TILE_WIDTH);
     const dim3 num_of_maxpool_blocks(maxpool_output_size/block_size.x+1, maxpool_output_size/block_size.y+1);
@@ -89,10 +89,10 @@ int main(int argc, char **argv) {
     cudaMalloc(&maxpool_output, sizeof(float) * maxpool_output_size * maxpool_output_size);
 
     printf("dev_mem_input size : %d\n", sizeof(dev_mem_input));
-    printf("last val: %f\n", dev_mem_input[input_size * input_size - 1]);
+    
     // copy variable to device memory
     cudaMemcpy(dev_mem_input, maxpool_input, sizeof(float) * input_size * input_size, cudaMemcpyHostToDevice);
-
+    printf("last val: %f\n", dev_mem_input[input_size * input_size - 1]);
     cudaError_t error = cudaGetLastError();
  
     // launch CUDA kernels
