@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
         cout<<maxpool_input[i]<<" ";
     }
     cout<<'\n';
-
+    printf("dev_mem_input size: %d\n", sizeof(maxpool_input)/sizeof(*maxpool_input));
     // set thread, block dimensions
     const dim3 block_size(TILE_WIDTH, TILE_WIDTH);
     const dim3 num_of_maxpool_blocks(maxpool_output_size/block_size.x+1, maxpool_output_size/block_size.y+1);
@@ -93,7 +93,6 @@ int main(int argc, char **argv) {
     cudaMemcpy(dev_mem_input, maxpool_input, sizeof(float) * input_size * input_size, cudaMemcpyHostToDevice);
     cudaError_t error = cudaGetLastError();
  
-    printf("dev_mem_input size: %d\n", sizeof(dev_mem_input)/sizeof(*dev_mem_input));
     // launch CUDA kernels
     // Then run maxpooling
     maxpool<<<num_of_maxpool_blocks, block_size>>>(dev_mem_input, maxpool_output, input_size, filter_size);
