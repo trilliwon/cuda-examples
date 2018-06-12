@@ -22,17 +22,16 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
     // TODO: out of bound
     // filter
     int index = (col * filter_size) + (row * filter_size * input_size);
-    for (int k = 0; k < 3; k++) {
-        printf("%f ", input[k]);
+    for (int k = 0; k < input * input; k++) {
+        if(i%input_size==0) cout<<"\n";
+        cout << input[k] << " ";
     }
-    printf("\n");
-    if (index >= input_size) { return; }
+    cout << endl;
     float max_val = input[index];
 
     for (int i = row * filter_size; i < filter_size; i++) {
         for (int j = col * filter_size; j < filter_size; j++) {
             index = j + (i * input_size);
-            if (index >= input_size) { return; }
             max_val = max(max_val, input[index]);
             printf("max_val: %d\n", max_val);
         }
@@ -79,7 +78,7 @@ int main(int argc, char **argv) {
         cout<<maxpool_input[i]<<" ";
     }
     cout<<'\n';
-    printf("dev_mem_input size: %d\n", sizeof(maxpool_input)/sizeof(*maxpool_input));
+
     // set thread, block dimensions
     const dim3 block_size(TILE_WIDTH, TILE_WIDTH);
     const dim3 num_of_maxpool_blocks(maxpool_output_size/block_size.x+1, maxpool_output_size/block_size.y+1);
