@@ -13,15 +13,14 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
     // input : input_matrix address
     // output : output buffer address
     // input_size : width, height of input matrix
-    // filter_size : filter_size of maxpolling
+    // filter_size : filter_size of maxpooling
     // all input, output matrices are vectorized
 
     int col = blockDim.x * blockIdx.x + threadIdx.x;
     int row = blockDim.y * blockIdx.y + threadIdx.y;
     
     // TODO: out of bound
-    // filter
-    // (row, col) -> (row * N) + col
+    // 2D to 1D : (row, col) -> (row * N) + col
     int index = ((row * filter_size) * input_size) + (col * filter_size);
     float max_val = input[index];
 
@@ -32,7 +31,7 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
         }
     }
     // assign max value
-    output[col + (row * (input_size / filter_size))] = max_val;
+    output[(row * (input_size / filter_size)) + col] = max_val;
 }
 
 int main(int argc, char **argv) {
