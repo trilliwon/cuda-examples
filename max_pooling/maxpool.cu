@@ -103,5 +103,6 @@ int main(int argc, char **argv) {
     cudaFree(dev_mem_input);
     cudaFree(maxpool_output);
     free(maxpool_output_buf);
+		delete[] maxpool_input;
     return 0;
 }
