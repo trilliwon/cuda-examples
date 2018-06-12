@@ -31,7 +31,7 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
         }
     }
     // assign max value
-    output[(row * (input_size / filter_size)) + col] = max_val;
+    output[(row * (input_size / filter_size)) + col] = (row * (input_size / filter_size)) + col;
 }
 
 int main(int argc, char **argv) {
