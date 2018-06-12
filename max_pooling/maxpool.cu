@@ -22,7 +22,10 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
     // TODO: out of bound
     // filter
     int index = (col * filter_size) + (row * filter_size * input_size);
-    printf("input size : %d\n", sizeof(input));
+    for (int k = 0; k < 3; k++) {
+        printf("%f ", input[k]);
+    }
+    printf("\n");
     if (index >= (input_size * input_size)) { return; }
     float max_val = input[index];
 
@@ -59,7 +62,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    float* maxpool_input = (float *) malloc(sizeof(float) * input_size * input_size);
+    float* maxpool_input = new float[input_size * input_size];
     
     // read input matrices 
     ifstream input_in(MAXPOOL_INPUT_FILENAME);
@@ -77,8 +80,6 @@ int main(int argc, char **argv) {
     }
     cout<<'\n';
 
-    printf("maxpool_input size : %d\n", sizeof(maxpool_input));
-    printf("last val i: %f\n", maxpool_input[input_size * input_size - 1]);
     // set thread, block dimensions
     const dim3 block_size(TILE_WIDTH, TILE_WIDTH);
     const dim3 num_of_maxpool_blocks(maxpool_output_size/block_size.x+1, maxpool_output_size/block_size.y+1);
@@ -119,6 +120,6 @@ int main(int argc, char **argv) {
     cudaFree(dev_mem_input);
     cudaFree(maxpool_output);
     free(maxpool_output_buf);
-		delete[] maxpool_input;
+	delete[] maxpool_input;
     return 0;
 }
