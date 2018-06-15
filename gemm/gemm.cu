@@ -167,9 +167,6 @@ int main(int argc, char **argv) {
     cudaFree(dev_mem_b);
     cudaFree(dev_mem_c);
     cudaFree(gemm_output);
-    cudaFree(dev_mem_input);
-    cudaFree(maxpool_output);
     free(gemm_output_buf);
-    free(maxpool_output_buf);
     return 0;
 }
