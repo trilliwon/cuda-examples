@@ -3,6 +3,7 @@
 #include<fstream>
 #include<vector>
 #include<string>
+#include "gputimer.h"
 
 #define TILE_WIDTH 2   /* set TILE_WIDTH 16 for the evaluation! */
 #define MAXPOOL_INPUT_FILENAME "input.txt"
@@ -29,6 +30,7 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
 
     for (int i = row * filter_size; i < row * filter_size + filter_size; i++) {
         for (int j = col * filter_size; j < col * filter_size + filter_size; j++) {
+            // update max_val if needed
             max_val = fmaxf(max_val, input[(i * input_size) + j]);
         }
     }
@@ -39,6 +41,7 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
 
 int main(int argc, char **argv) {
 
+    GpuTimer timer;
     if(argc < 2) {
         cout << "usage : " << argv[0] << " input_size filter_size alpha beta\n" << "example : " << argv[0] << " 100 2 0.5 0.8\n";
         return 1;
@@ -68,10 +71,14 @@ int main(int argc, char **argv) {
     
     // prints inputs for debugging.
     cout<<"filter size : "<<filter_size;
+    cout<<"input size: " << input_size;
     cout<<"\n========== MAXPOOL_INPUT ==========\n";
-    for (int i = 0; i < input_size * input_size; ++i) {
+    for (int i = 0; i < 100; ++i) {
         if(i%input_size==0) cout<<"\n";
         cout<<maxpool_input[i]<<" ";
+    }
+    if (input_size > 10 ) {
+        cout << ".....";
     }
     cout<<'\n';
 
@@ -88,6 +95,8 @@ int main(int argc, char **argv) {
     cudaMemcpy(dev_mem_input, maxpool_input, sizeof(float) * input_size * input_size, cudaMemcpyHostToDevice);
     cudaError_t error = cudaGetLastError();
  
+    timer.Start();
+
     // launch CUDA kernels
     // Then run maxpooling
     maxpool<<<num_of_maxpool_blocks, block_size>>>(dev_mem_input, maxpool_output, input_size, filter_size);
@@ -97,7 +106,9 @@ int main(int argc, char **argv) {
         fprintf(stderr, "ERROR %s\n", cudaGetErrorString(error));
         return 1;
     }
- 
+    timer.Stop();
+    printf("Time elapsed = %g ms\n", timer.Elapsed());
+
     // allocate output buf in main memory
     float *maxpool_output_buf = (float*) malloc (sizeof(float)*maxpool_output_size*maxpool_output_size);
     
