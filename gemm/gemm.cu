@@ -84,9 +84,9 @@ int main(int argc, char **argv) {
     ifstream c_in(C_FILENAME);
 
     for (int i = 0; i < input_size*input_size; ++i) {
-        a[i] = rand() % 100;
-        b[i] = rand() % 100;
-        c[i] = rand() % 100;
+        a[i] = rand() % 10;
+        b[i] = rand() % 10;
+        c[i] = rand() % 10;
     }
     
     // prints inputs for debugging.
