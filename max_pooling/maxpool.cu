@@ -5,7 +5,7 @@
 #include<string>
 #include "gputimer.h"
 
-#define TILE_WIDTH 2   /* set TILE_WIDTH 16 for the evaluation! */
+#define TILE_WIDTH 16   /* set TILE_WIDTH 16 for the evaluation! */
 #define MAXPOOL_INPUT_FILENAME "input.txt"
 
 using namespace std;
