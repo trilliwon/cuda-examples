@@ -45,8 +45,8 @@
      for(int p = 0; p < input_size / TILE_WIDTH; ++p) {
          // CHANGE
 
-        s_a[ty][tx] = a[ p * input_size + p * TILE_WIDTH + tx];
-        s_b[ty][tx] = b[( p * input_size + ty) * input_size + col];
+        s_a[ty][tx] = b[ p * input_size + p * TILE_WIDTH + tx];
+        s_b[ty][tx] = a[( p * input_size + ty) * input_size + col];
 
         __syncthreads();
          // You need to use __syncthreads() a few times
