@@ -109,7 +109,7 @@ int main(int argc, char **argv) {
             break;
         }
     }
-    cout<<"\nbeta : "<<beta<<'\n';
+    cout<<"\n\nbeta : "<<beta<<'\n';
     cout<<"========== C ==========\n";
     for (int i = 0; i < input_size * input_size; ++i) {
         if(i%input_size==0) cout<<"\n";
