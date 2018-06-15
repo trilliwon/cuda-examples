@@ -61,11 +61,12 @@
 
 int main(int argc, char **argv) {
     if(argc < 2) {
-        cout << "usage : " << argv[0] << " alpha beta\n" << "example : " << argv[0] << "0.5 0.8\n";
+        cout << "usage : " << argv[0] << " alpha beta\n" << "example : " << argv[0] << "100 0.5 0.8\n";
         return 1;
     }
-    const float alpha = stof(argv[1]);
-    const float beta = stof(argv[2]);
+    const int input_size = stoi(argv[1]);
+    const float alpha = stof(argv[2]);
+    const float beta = stof(argv[3]);
 
     // check input_size is power of 2
     if(input_size == 0 && (input_size & (input_size-1))){
@@ -99,17 +100,29 @@ int main(int argc, char **argv) {
     for (int i = 0; i < input_size * input_size; ++i) {
         if(i%input_size==0) cout<<"\n";
         cout<<a[i]<<" ";
+        if (input_size > 100) {
+            cout << "\n.......";
+            break;
+        }
     }
     cout<<"\n========== B ==========\n";
     for (int i = 0; i < input_size * input_size; ++i) {
         if(i%input_size==0) cout<<"\n";
         cout<<b[i]<<" ";
+        if (input_size > 100) {
+            cout << "\n.......";
+            break;
+        }
     }
     cout<<"\nbeta : "<<beta<<'\n';
     cout<<"========== C ==========\n";
     for (int i = 0; i < input_size * input_size; ++i) {
         if(i%input_size==0) cout<<"\n";
         cout<<c[i]<<" ";
+        if (input_size > 100) {
+            cout << "\n.......";
+            break;
+        }
     }
     cout<<'\n';
     
