@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
     }
     
     // prints inputs for debugging.
-    cout<<"filter size : "<<filter_size << endl;
+    cout << endl << "filter size : "<<filter_size << endl;
     cout<<"input size: " << input_size << endl;
     cout<<"\n========== MAXPOOL_INPUT ==========\n";
     for (int i = 0; i < 100; ++i) {
