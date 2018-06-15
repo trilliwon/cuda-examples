@@ -38,10 +38,12 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
 }
 
 int main(int argc, char **argv) {
+
     if(argc < 2) {
         cout << "usage : " << argv[0] << " input_size filter_size alpha beta\n" << "example : " << argv[0] << " 100 2 0.5 0.8\n";
         return 1;
     }
+
     const int input_size = stoi(argv[1]);
     const int filter_size = stoi(argv[2]); // used for maxpooling
     const int maxpool_output_size = input_size/filter_size;
@@ -59,11 +61,9 @@ int main(int argc, char **argv) {
 
     float* maxpool_input = new float[input_size * input_size];
     
-    // read input matrices 
-    ifstream input_in(MAXPOOL_INPUT_FILENAME);
-
+    // generate random array
     for (int i = 0; i < input_size*input_size; ++i) {
-        input_in >> maxpool_input[i];
+        maxpool_input[i] = rand() % 100;
     }
     
     // prints inputs for debugging.
