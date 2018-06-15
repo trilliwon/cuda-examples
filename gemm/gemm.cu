@@ -27,8 +27,6 @@
  
      int tx = threadIdx.x, ty = threadIdx.y;
      int bx = blockIdx.x,  by = blockIdx.y;
-     printf("threadIdx.x : %d, threadIdx.y: %d\n", tx, ty);
-     printf("blockIdx.x : %d, blockIdx.y: %d\n", bx, by);
  
      int row = by * blockDim.y + ty;
      int col = bx * blockDim.x + tx;
