@@ -45,14 +45,14 @@
      for(int p = 0; p < input_size/TILE_WIDTH; ++p) {
          // CHANGE
 
-         if (row < input_size && (i*TILE_WIDTH + tx)<input_size) {
-             s_a[ty][tx] = a[i*input_size + i*TILE_WIDTH + tx];
+         if (row < input_size && (p*TILE_WIDTH + tx)<input_size) {
+             s_a[ty][tx] = a[p*input_size + p*TILE_WIDTH + tx];
          } else {
             s_a[ty][tx] = 0;
          }
      
-        if (col < input_size && (i*TILE_WIDTH + ty)<input_size) {
-            s_b[ty][tx] = b[(i*input_size + ty)*input_size + col];
+        if (col < input_size && (p*TILE_WIDTH + ty)<input_size) {
+            s_b[ty][tx] = b[(p*input_size + ty)*input_size + col];
         } else {
             s_b[ty][tx] = 0;
         }
