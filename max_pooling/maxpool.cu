@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
         cout<<maxpool_input[i]<<" ";
     }
     if (input_size > 10 ) {
-        cout << ".....";
+        cout << "........";
     }
     cout<<'\n';
 
@@ -117,9 +117,12 @@ int main(int argc, char **argv) {
     
     // prints the results
     cout<<"\n========== MAXPOOL OUTPUT ==========\n";
-    for (int i = 0; i < maxpool_output_size * maxpool_output_size; ++i) {
+    for (int i = 0; i < 100; ++i) {
         if(i%maxpool_output_size==0) cout<<"\n";
         cout<<maxpool_output_buf[i]<<" ";
+    }
+    if (maxpool_output_size > 10 ) {
+        cout << "........";
     }
     cout<<'\n';
 
