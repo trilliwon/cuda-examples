@@ -61,7 +61,7 @@
 
 int main(int argc, char **argv) {
     if(argc < 2) {
-        cout << "usage : " << argv[0] << " alpha beta\n" << "example : " << argv[0] << "100 0.5 0.8\n";
+        cout << "usage : " << argv[0] << " alpha beta\n" << "example : " << argv[0] << " 100 0.5 0.8\n";
         return 1;
     }
     const int input_size = stoi(argv[1]);
