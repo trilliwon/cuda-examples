@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
         return 1;
     }
     timer.Stop();
-    cout << "\nTime elapsed = " << timer.Elapsed() << " ms\n";
+    cout << "\n ===> Time elapsed = " << timer.Elapsed() << " ms\n";
 
     // allocate output buf in main memory
     float *maxpool_output_buf = (float*) malloc (sizeof(float)*maxpool_output_size*maxpool_output_size);
