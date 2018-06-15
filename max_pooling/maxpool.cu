@@ -73,13 +73,16 @@ int main(int argc, char **argv) {
     cout << endl << "filter size : "<<filter_size << endl;
     cout<<"input size: " << input_size << endl;
     cout<<"\n========== MAXPOOL_INPUT ==========\n";
-    for (int i = 0; i < 100; ++i) {
+    for (int i = 0; i < input_size*input_size; ++i) {
         if(i%input_size==0) cout<<"\n";
         cout<<maxpool_input[i]<<" ";
+
+        if (i > 100 ) {
+            cout << "\n........";
+            break;
+        }
     }
-    if (input_size > 10 ) {
-        cout << "........";
-    }
+    
     cout<<'\n';
 
     // set thread, block dimensions
@@ -117,12 +120,13 @@ int main(int argc, char **argv) {
     
     // prints the results
     cout<<"\n========== MAXPOOL OUTPUT ==========\n";
-    for (int i = 0; i < 100; ++i) {
+    for (int i = 0; i < maxpool_output_size * maxpool_output_size; ++i) {
         if(i%maxpool_output_size==0) cout<<"\n";
         cout<<maxpool_output_buf[i]<<" ";
-    }
-    if (maxpool_output_size > 10 ) {
-        cout << "........";
+        if (i > 50 ) {
+            cout << "\n........";
+            break;
+        }
     }
     cout<<'\n';
 
