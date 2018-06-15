@@ -42,16 +42,16 @@
      // make sure you handle the case when the matrix sizes are not
      // multiple of TILE_WIDTH!
      // loop over the tiles of the input in phases
-     for(int p = 0; p < input_size/TILE_WIDTH; ++p) {
+     for(int p = 0; p < ceilf(input_size/(float)TILE_WIDTH); ++p) {
          // CHANGE
 
-         if (row < input_size && (p*TILE_WIDTH + tx)<input_size) {
+         if (row < input_size && (p*TILE_WIDTH + tx) < input_size) {
              s_a[ty][tx] = a[p*input_size + p*TILE_WIDTH + tx];
          } else {
-            s_a[ty][tx] = 0;
+             s_a[ty][tx] = 0;
          }
      
-        if (col < input_size && (p*TILE_WIDTH + ty)<input_size) {
+        if (col < input_size && (p*TILE_WIDTH + ty) < input_size) {
             s_b[ty][tx] = b[(p*input_size + ty)*input_size + col];
         } else {
             s_b[ty][tx] = 0;
@@ -60,7 +60,7 @@
          // You need to use __syncthreads() a few times
          // to synchronize the threads in a thread block.
 
-         for (int j=0; j<TILE_WIDTH; j++) {
+         for (int j = 0; j < TILE_WIDTH; j++) {
             result += s_a[ty][j] * s_b[j][tx];
          }
          
