@@ -99,18 +99,17 @@ int main(int argc, char **argv) {
     cudaError_t error = cudaGetLastError();
  
     timer.Start();
-
     // launch CUDA kernels
     // Then run maxpooling
     maxpool<<<num_of_maxpool_blocks, block_size>>>(dev_mem_input, maxpool_output, input_size, filter_size);
+    timer.Stop();
     cudaDeviceSynchronize();
     error = cudaGetLastError();
     if(error!=cudaSuccess) {
         fprintf(stderr, "ERROR %s\n", cudaGetErrorString(error));
         return 1;
     }
-    timer.Stop();
-    cout << "\n ===> Time elapsed = " << timer.Elapsed() << " ms\n";
+    
 
     // allocate output buf in main memory
     float *maxpool_output_buf = (float*) malloc (sizeof(float)*maxpool_output_size*maxpool_output_size);
@@ -129,6 +128,8 @@ int main(int argc, char **argv) {
         }
     }
     cout<<'\n';
+
+    cout << "\n ===> Time elapsed = " << timer.Elapsed() << " ms\n";
 
     cudaFree(dev_mem_input);
     cudaFree(maxpool_output);
