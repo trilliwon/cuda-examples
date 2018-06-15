@@ -74,11 +74,6 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    if(filter_size == 0){
-        cout << "filter_size cannot be 0\n";
-        return 1;
-    }
-
     float* a = new float[input_size*input_size];
     float* b = new float[input_size*input_size];
     float* c = new float[input_size*input_size];
