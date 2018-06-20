@@ -5,7 +5,7 @@
 NVCC_FLAGS := -std=c++11
 NVCC := /usr/local/cuda/bin/nvcc
 LD_LIBRARY_PATH := /usr/local/cuda/lib64
-TARGET = gemm 
+TARGET = gemm
 
 all: $(TARGET) 
 

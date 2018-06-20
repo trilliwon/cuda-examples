@@ -38,6 +38,7 @@
      for (int i = 0; i<input_size; i++) {
          sum += a[row*input_size + i] * b[i*input_size + col];
      }
+
      output[row * input_size + col] = sum;
 }
 
