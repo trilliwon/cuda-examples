@@ -142,6 +142,10 @@ int main(int argc, char **argv) {
     for (int i = 0; i < input_size * input_size; ++i) {
         if(i%input_size==0) cout<<"\n";
         cout<<gemm_output_buf[i]<<" ";
+        if (input_size > 100) {
+            cout << "\n.......";
+            break;
+        }
     }
 
     cout<<'\n';
