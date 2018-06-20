@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
     cout<<"========== A ==========\n";
     for (int i = 0; i < input_size * input_size; ++i) {
         if(i%input_size==0) cout<<"\n";
-        cout<<a[i]<<" ";
+        cout<<a[i]<<", ";
         if (input_size > 100) {
             cout << "\n.......";
             break;
@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
     cout<<"\n========== B ==========\n";
     for (int i = 0; i < input_size * input_size; ++i) {
         if(i%input_size==0) cout<<"\n";
-        cout<<b[i]<<" ";
+        cout<<b[i]<<", ";
         if (input_size > 100) {
             cout << "\n.......";
             break;
@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
     cout<<"========== C ==========\n";
     for (int i = 0; i < input_size * input_size; ++i) {
         if(i%input_size==0) cout<<"\n";
-        cout<<c[i]<<" ";
+        cout<<c[i]<<", ";
         if (input_size > 100) {
             cout << "\n.......";
             break;
