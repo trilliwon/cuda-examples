@@ -41,7 +41,7 @@
          sum += a[row * input_size + i] * b[i * input_size + col];
      }
 
-     output[row * input_size + col] = alpha * sum + c[row * input_size + col];
+     output[row * input_size + col] = alpha * sum + beta * c[row * input_size + col];
 }
 
 int main(int argc, char **argv) {
