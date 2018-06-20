@@ -21,18 +21,32 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
     // input : input_matrix address
     // output : output buffer address
     // input_size : width, height of input matrix
-    // filter_size : filter_size of maxpolling
+    // filter_size : filter_size of maxpooling
     // all input, output matrices are vectorized
 
     int col = blockDim.x * blockIdx.x + threadIdx.x;
     int row = blockDim.y * blockIdx.y + threadIdx.y;
 
-    // out of bound
+    int output_size = input_size / filter_size;
 
-    // CHANGE
+    // out of bound
+    if (col >= output_size || row >= output_size) { return; }
+    
+    // 2D to 1D : (row, col) -> (row * N) + col
+    float max_val = input[((row * filter_size) * input_size) + (col * filter_size)];
+
+    for (int i = row * filter_size; i < row * filter_size + filter_size; i++) {
+        for (int j = col * filter_size; j < col * filter_size + filter_size; j++) {
+            // update max_val if needed
+            max_val = fmaxf(max_val, input[(i * input_size) + j]);
+        }
+    }
+
+    // assign max value
+    output[(row * output_size) + col] = max_val;
 }
 
-__global__ void gemm(float *a, float *b, float *c, const float alpha, const float beta, float *output, const int input_size){
+__global__ void gemm(float *a, float *b, float *c, const float alpha, const float beta, float *output, const int input_size) {
     // a, b, c : input matrix address
     // alpha, beta : input constant
     // output : output buffer address
@@ -42,31 +56,42 @@ __global__ void gemm(float *a, float *b, float *c, const float alpha, const floa
     int tx = threadIdx.x, ty = threadIdx.y;
     int bx = blockIdx.x,  by = blockIdx.y;
 
-    int row = by*blockDim.y + ty;
-    int col = bx*blockDim.x + tx;
-    
-    if(row>=input_size ||col>=input_size) { return; }
-    
+    int row = by * blockDim.y + ty;
+    int col = bx * blockDim.x + tx;
+
     // allocate 2D tiles in __shared__ memory
     __shared__ float s_a[TILE_WIDTH][TILE_WIDTH];
     __shared__ float s_b[TILE_WIDTH][TILE_WIDTH];
 
-    float result = 0;
+    float sum = 0.0f;
 
-    // make sure you handle the case when the matrix sizes are not
-    // multiple of TILE_WIDTH!
-    // loop over the tiles of the input in phases
-    for(int p = 0; p < input_size/TILE_WIDTH; ++p){
-        // CHANGE
+    for (int i = 0; i < ceilf(input_size/TILE_WIDTH) + 1; i++) {
 
-        // You need to use __syncthreads() a few times
-        // to synchronize the threads in a thread block.
+        if (row < input_size && (TILE_WIDTH * i + tx) < input_size) {
+            s_a[ty][tx] = a[row * input_size + TILE_WIDTH * i + tx];
+        } else {
+            s_a[ty][tx] = 0.0f;
+        }
+
+        if (col < input_size && (i * TILE_WIDTH + ty) < input_size) {
+            s_b[ty][tx] = b[(i * TILE_WIDTH + ty) * input_size + col];
+        } else {
+            s_b[ty][tx] = 0.0f;
+        }
+
+        __syncthreads();
+
+        for (int j = 0; j<TILE_WIDTH; j++) {
+            sum += s_a[ty][j] * s_b[j][tx];
+        }
+
+        __syncthreads();
     }
 
-    // write out the result to output[row*input_size + col] 
-    // CHANGE
+    if (row < input_size && col < input_size) {
+        output[row * input_size + col] = alpha * sum + beta * c[row * input_size + col];
+    }
 }
-
 
 int main(int argc, char **argv) {
     if(argc < 4) {
@@ -90,7 +115,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    float maxpool_input[input_size*input_size];
+    float maxpool_input = new float[input_size * input_size];
     float* a = new float[input_size*input_size];
     float* b = new float[input_size*input_size];
     float* c = new float[input_size*input_size];
@@ -203,5 +228,10 @@ int main(int argc, char **argv) {
     cudaFree(maxpool_output);
     free(gemm_output_buf);
     free(maxpool_output_buf);
+
+    delete[] maxpool_input;
+    delete[] a;
+    delete[] b;
+    delete[] c;
     return 0;
 }

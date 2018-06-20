@@ -185,5 +185,9 @@ int main(int argc, char **argv) {
     cudaFree(dev_mem_c);
     cudaFree(gemm_output);
     free(gemm_output_buf);
+
+    delete[] a;
+    delete[] b;
+    delete[] c;
     return 0;
 }
