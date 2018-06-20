@@ -31,8 +31,6 @@
 
     int row = by * blockDim.y + ty;
     int col = bx * blockDim.x + tx;
-    
-    if(row>=input_size ||col>=input_size) { return; }
 
     // allocate 2D tiles in __shared__ memory
     __shared__ float s_a[TILE_WIDTH][TILE_WIDTH];
@@ -41,9 +39,17 @@
     float sum = 0.0f;
 
     for (int i = 0; i < ceilf(input_size/TILE_WIDTH) + 1; i++) {
+        if (row < input_size) {
+            s_a[ty][tx] = a[row * input_size + TILE_WIDTH * i + tx];
+        } else {
+            s_a[ty][tx] = 0.0f;
+        }
 
-        s_a[ty][tx] = a[row * input_size + TILE_WIDTH * i + tx];
-        s_b[ty][tx] = b[(i * TILE_WIDTH + ty) * input_size + col];
+        if (col < input_size) {
+            s_b[ty][tx] = b[(i * TILE_WIDTH + ty) * input_size + col];
+        } else {
+            s_b[ty][tx] = 0.0f;
+        }
 
         __syncthreads();
 
