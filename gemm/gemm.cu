@@ -36,11 +36,12 @@
 
      float sum = 0.0f;
 
+     // Y = (alpha * A) x B + (beta * C)
      for (int i = 0; i<input_size; i++) {
-         sum += a[row*input_size + i] * b[i*input_size + col];
+         sum += a[row * input_size + i] * b[i * input_size + col];
      }
 
-     output[row * input_size + col] = sum;
+     output[row * input_size + col] = alpha * sum + c[row * input_size + col];
 }
 
 int main(int argc, char **argv) {
