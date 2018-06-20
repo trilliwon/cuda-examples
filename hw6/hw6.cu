@@ -215,6 +215,7 @@ int main(int argc, char **argv) {
     }
 
     cout << endl;
+    
     cout<<"\n========== MAXPOOL OUTPUT ==========\n";
     for (int i = 0; i < maxpool_output_size * maxpool_output_size; ++i) {
         if(i%maxpool_output_size==0) cout<<"\n";
