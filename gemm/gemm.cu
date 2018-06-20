@@ -17,7 +17,6 @@
  #define C_FILENAME "c.txt"
  
  using namespace std;
- 
 
  __global__ void gemm(float *a, float *b, float *c, const float alpha, const float beta, float *output, const int input_size) {
     // a, b, c : input matrix address
@@ -135,9 +134,6 @@ int main(int argc, char **argv) {
     // set thread, block dimensions
     const dim3 block_size(TILE_WIDTH, TILE_WIDTH);
     const dim3 num_of_blocks(input_size/block_size.x + 1, input_size/block_size.y + 1);
-
-    cout << "block_size x, y: " << block_size.x << ", " << block_size.y << endl; 
-    cout << "num_of_blocks x, y: " << num_of_blocks.x << ", " << num_of_blocks.y << endl;
 
     // memory allocation for the device
     float *dev_mem_a, *dev_mem_b, *dev_mem_c, *gemm_output;
