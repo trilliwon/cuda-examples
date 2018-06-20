@@ -40,7 +40,8 @@
 
     float sum = 0.0f;
 
-    for (int i = 0; i < gridDim.x; i++) {
+    for (int i = 0; i < input_size/TILE_WIDTH+1; i++) {
+
         s_a[ty][tx] = a[row * input_size + TILE_WIDTH * i + tx];
         s_b[ty][tx] = b[(i * TILE_WIDTH + ty) * input_size + col];
 
@@ -49,6 +50,7 @@
         for (int j = 0; j<TILE_WIDTH; j++) {
             sum += s_a[ty][j] * s_b[j][tx];
         }
+
         __syncthreads();
     }
 
