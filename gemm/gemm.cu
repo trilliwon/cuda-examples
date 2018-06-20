@@ -8,7 +8,8 @@
  #include<fstream>
  #include<vector>
  #include<string>
- 
+ #include "gputimer.h"
+
  #define TILE_WIDTH 2   /* set TILE_WIDTH 16 for the evaluation! */
  #define MAXPOOL_INPUT_FILENAME "input.txt"
  #define A_FILENAME "a.txt"
@@ -43,6 +44,8 @@
 }
 
 int main(int argc, char **argv) {
+
+    GpuTimer timer;
     if(argc < 2) {
         cout << "usage : " << argv[0] << " alpha beta\n" << "example : " << argv[0] << " 100 0.5 0.8\n";
         return 1;
@@ -120,10 +123,12 @@ int main(int argc, char **argv) {
     cudaMemcpy(dev_mem_b, b, sizeof(float) * input_size * input_size, cudaMemcpyHostToDevice);
     cudaMemcpy(dev_mem_c, c, sizeof(float) * input_size * input_size, cudaMemcpyHostToDevice);
 
+    timer.Start();
     // launch CUDA kernels
-
     // First launch gemm kernel
     gemm<<<num_of_blocks, block_size>>>(dev_mem_a, dev_mem_b, dev_mem_c, alpha, beta, gemm_output, input_size);
+    timer.Stop();
+
     cudaDeviceSynchronize();
     cudaError_t error = cudaGetLastError();
     if(error!=cudaSuccess) {
@@ -150,6 +155,7 @@ int main(int argc, char **argv) {
 
     cout<<'\n';
 
+    cout << "\n ===> Time elapsed = " << timer.Elapsed() << " ms\n";
     cudaFree(dev_mem_a);
     cudaFree(dev_mem_b);
     cudaFree(dev_mem_c);
