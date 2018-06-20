@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    float maxpool_input = new float[input_size * input_size];
+    float* maxpool_input = new float[input_size * input_size];
     float* a = new float[input_size*input_size];
     float* b = new float[input_size*input_size];
     float* c = new float[input_size*input_size];
