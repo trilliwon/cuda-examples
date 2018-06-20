@@ -18,7 +18,7 @@
  using namespace std;
  
 
- __global__ void gemm(float *a, float *b, float *c, const float alpha, const float beta, float *output, const int input_size){
+ __global__ void gemm(float *a, float *b, float *c, const float alpha, const float beta, float *output, const int input_size) {
      // a, b, c : input matrix address
      // alpha, beta : input constant
      // output : output buffer address
@@ -32,40 +32,13 @@
      int col = bx * blockDim.x + tx;
      
      if(row>=input_size ||col>=input_size) { return; }
-     
-     // allocate 2D tiles in __shared__ memory
-     __shared__ float s_a[TILE_WIDTH][TILE_WIDTH];
-     __shared__ float s_b[TILE_WIDTH][TILE_WIDTH];
- 
-     float result = 0;
-     
-     // make sure you handle the case when the matrix sizes are not
-     // multiple of TILE_WIDTH!
-     // loop over the tiles of the input in phases
-     for(int p = 0; p < input_size / TILE_WIDTH; ++p) {
-         // CHANGE
 
-        s_a[ty][tx] = a[ p * input_size + p * TILE_WIDTH + tx];
-        s_b[ty][tx] = b[( p * input_size + ty) * input_size + col];
+     float sum = 0.0f;
 
-        __syncthreads();
-         // You need to use __syncthreads() a few times
-         // to synchronize the threads in a thread block.
-
-        for (int j = 0; j < TILE_WIDTH; j++) {
-            result += s_a[ty][j] * s_b[j][tx];
-        }
-         
-        __syncthreads();
-        // after the entire tile's values have been used, proceed
-    }
-
-    // write out the result to output[row*input_size + col] 
-    // CHANGE
-    // boundary check
-    if(row < input_size && col < input_size) {
-        output[row * input_size + col] = result;
-    }
+     for (int i = 0; i<input_size; i++) {
+         sum += a[row*input_size + i] * b[i*input_size + col];
+     }
+     output[row * input_size + col] = sum;
 }
 
 int main(int argc, char **argv) {
