@@ -177,7 +177,7 @@ int main(int argc, char **argv) {
     cudaMemcpy(dev_mem_a, a, sizeof(float) * input_size * input_size, cudaMemcpyHostToDevice);
     cudaMemcpy(dev_mem_b, b, sizeof(float) * input_size * input_size, cudaMemcpyHostToDevice);
     cudaMemcpy(dev_mem_c, c, sizeof(float) * input_size * input_size, cudaMemcpyHostToDevice);
-    cudaMemcpy(dev_mem_input, &maxpool_input, sizeof(float) * input_size * input_size, cudaMemcpyHostToDevice);
+    cudaMemcpy(dev_mem_input, maxpool_input, sizeof(float) * input_size * input_size, cudaMemcpyHostToDevice);
 
     // launch CUDA kernels
 
@@ -215,7 +215,7 @@ int main(int argc, char **argv) {
     }
 
     cout << endl;
-    
+
     cout<<"\n========== MAXPOOL OUTPUT ==========\n";
     for (int i = 0; i < maxpool_output_size * maxpool_output_size; ++i) {
         if(i%maxpool_output_size==0) cout<<"\n";
