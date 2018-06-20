@@ -39,6 +39,7 @@
     float sum = 0.0f;
 
     for (int i = 0; i < ceilf(input_size/TILE_WIDTH) + 1; i++) {
+
         if (row < input_size && (TILE_WIDTH * i + tx) < input_size) {
             s_a[ty][tx] = a[row * input_size + TILE_WIDTH * i + tx];
         } else {
@@ -61,7 +62,7 @@
     }
 
     if (row < input_size && col < input_size) {
-        output[row * input_size + col] = sum;
+        output[row * input_size + col] = alpha * sum + beta * c[row * input_size + col];
     }
 }
 
