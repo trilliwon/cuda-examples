@@ -10,7 +10,7 @@
  #include<string>
  #include "gputimer.h"
 
- #define TILE_WIDTH 16   /* set TILE_WIDTH 16 for the evaluation! */
+ #define TILE_WIDTH 2   /* set TILE_WIDTH 16 for the evaluation! */
  #define MAXPOOL_INPUT_FILENAME "input.txt"
  #define A_FILENAME "a.txt"
  #define B_FILENAME "b.txt"
@@ -20,37 +20,50 @@
  
 
  __global__ void gemm(float *a, float *b, float *c, const float alpha, const float beta, float *output, const int input_size) {
-     // a, b, c : input matrix address
-     // alpha, beta : input constant
-     // output : output buffer address
-     // input_size : width, height of input matrix
-     // all input, output matrices are vectorized
- 
-     int tx = threadIdx.x, ty = threadIdx.y;
-     int bx = blockIdx.x,  by = blockIdx.y;
- 
-     int row = by * blockDim.y + ty;
-     int col = bx * blockDim.x + tx;
-     
-     if(row>=input_size ||col>=input_size) { return; }
+    // a, b, c : input matrix address
+    // alpha, beta : input constant
+    // output : output buffer address
+    // input_size : width, height of input matrix
+    // all input, output matrices are vectorized
 
-     float sum = 0.0f;
+    int tx = threadIdx.x, ty = threadIdx.y;
+    int bx = blockIdx.x,  by = blockIdx.y;
 
-     // Y = (alpha * A) x B + (beta * C)
-     for (int i = 0; i<input_size; i++) {
-         sum += a[row * input_size + i] * b[i * input_size + col];
-     }
+    int row = by * blockDim.y + ty;
+    int col = bx * blockDim.x + tx;
+    
+    if(row>=input_size ||col>=input_size) { return; }
 
-     output[row * input_size + col] = alpha * sum + beta * c[row * input_size + col];
+    // allocate 2D tiles in __shared__ memory
+    __shared__ float s_a[TILE_WIDTH][TILE_WIDTH];
+    __shared__ float s_b[TILE_WIDTH][TILE_WIDTH];
+
+    float sum = 0.0f;
+
+    for (int i = 0; i < gridDim.x; i++) {
+        s_a[ty][tx] = a[row * input_size + TILE_WIDTH * i + tx];
+        s_b[ty][tx] = b[(i * TILE_WIDTH + ty) * input_size + col];
+
+        __syncthreads();
+
+        for (int j = 0; j<TILE_WIDTH; j++) {
+            sum += s_a[ty][j] * s_b[j][tx];
+        }
+        __syncthreads();
+    }
+
+    output[row * input_size + col] = sum;
 }
 
 int main(int argc, char **argv) {
 
     GpuTimer timer;
+
     if(argc < 2) {
         cout << "usage : " << argv[0] << " alpha beta\n" << "example : " << argv[0] << " 100 0.5 0.8\n";
         return 1;
     }
+
     const int input_size = stoi(argv[1]);
     const float alpha = stof(argv[2]);
     const float beta = stof(argv[3]);
