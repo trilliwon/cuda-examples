@@ -127,6 +127,7 @@ int main(int argc, char **argv) {
     const dim3 block_size(TILE_WIDTH, TILE_WIDTH);
     const dim3 num_of_blocks(input_size/block_size.x+1, input_size/block_size.y+1);
 
+    cout << "num_of_blocks x, y: " << num_of_blocks.x << ", " << num_of_blocks.y << endl;
     // memory allocation for the device
     float *dev_mem_a, *dev_mem_b, *dev_mem_c, *gemm_output;
     cudaMalloc(&dev_mem_a, sizeof(float) * input_size * input_size);
