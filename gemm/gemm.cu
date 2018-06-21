@@ -27,6 +27,7 @@ __global__ void gemm(float *a, float *b, float *c, const float alpha, const floa
 
     int tx = threadIdx.x, ty = threadIdx.y;
     int bx = blockIdx.x,  by = blockIdx.y;
+    int i = blockIdx.x * TILE_WIDTH, j = blockIdx.y * TILE_WIDTH;
 
     int row = by * blockDim.y + ty;
     int col = bx * blockDim.x + tx;
@@ -34,6 +35,7 @@ __global__ void gemm(float *a, float *b, float *c, const float alpha, const floa
     // allocate 2D tiles in __shared__ memory
     __shared__ float s_a[TILE_WIDTH][TILE_WIDTH];
     __shared__ float s_b[TILE_WIDTH][TILE_WIDTH];
+    __shared__ float s_c[TILE_WIDTH][TILE_WIDTH];
 
     float sum = 0.0f;
 
@@ -62,14 +64,8 @@ __global__ void gemm(float *a, float *b, float *c, const float alpha, const floa
 
     if (row < input_size && col < input_size) {
 
-        int i = blockIdx.x * TILE_WIDTH, j = blockIdx.y * TILE_WIDTH;
-
-        __shared__ float s_c[TILE_WIDTH][TILE_WIDTH];
-
         s_c[ty][tx] =  alpha * sum + beta * c[(i + tx) + (j + ty)*input_size];
-        
         __syncthreads();
-
         output[(i + tx) + (j + ty)*input_size] = s_c[ty][tx];
     }
 }
