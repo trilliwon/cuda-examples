@@ -20,9 +20,6 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
     int col = blockDim.x * blockIdx.x + threadIdx.x;
     int row = blockDim.y * blockIdx.y + threadIdx.y;
 
-    col /= filter_size;
-    row /= filter_size;
-
     int output_size = input_size / filter_size;
 
     // out of bound
