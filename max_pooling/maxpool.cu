@@ -20,6 +20,9 @@ __global__ void maxpool(float *input, float *output, const int input_size, const
     int col = blockDim.x * blockIdx.x + threadIdx.x;
     int row = blockDim.y * blockIdx.y + threadIdx.y;
 
+    col /= filter_size;
+    row /= filter_size;
+
     int output_size = input_size / filter_size;
 
     // out of bound
@@ -87,7 +90,7 @@ int main(int argc, char **argv) {
 
     // set thread, block dimensions
     const dim3 block_size(TILE_WIDTH, TILE_WIDTH);
-    const dim3 num_of_maxpool_blocks(maxpool_output_size/block_size.x+1, maxpool_output_size/block_size.y+1);
+    const dim3 num_of_maxpool_blocks(input_size/block_size.x+1, input_size/block_size.y+1);
 
     // memory allocation for the device
     float *dev_mem_input, *maxpool_output;
