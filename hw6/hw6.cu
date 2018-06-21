@@ -55,6 +55,7 @@ __global__ void gemm(float *a, float *b, float *c, const float alpha, const floa
 
     int tx = threadIdx.x, ty = threadIdx.y;
     int bx = blockIdx.x,  by = blockIdx.y;
+    int i = blockIdx.x * TILE_WIDTH, j = blockIdx.y * TILE_WIDTH;
 
     int row = by * blockDim.y + ty;
     int col = bx * blockDim.x + tx;
@@ -62,34 +63,37 @@ __global__ void gemm(float *a, float *b, float *c, const float alpha, const floa
     // allocate 2D tiles in __shared__ memory
     __shared__ float s_a[TILE_WIDTH][TILE_WIDTH];
     __shared__ float s_b[TILE_WIDTH][TILE_WIDTH];
+    __shared__ float s_c[TILE_WIDTH][TILE_WIDTH];
 
     float sum = 0.0f;
 
     for (int i = 0; i < ceilf(input_size/TILE_WIDTH) + 1; i++) {
 
+        s_a[ty][tx] = 0.0f; // to ignore uneffected values
+
+        // boundary check
         if (row < input_size && (TILE_WIDTH * i + tx) < input_size) {
             s_a[ty][tx] = a[row * input_size + TILE_WIDTH * i + tx];
-        } else {
-            s_a[ty][tx] = 0.0f;
         }
 
+        s_b[ty][tx] = 0.0f; // to ignore uneffected values
+
+        // boundary check
         if (col < input_size && (i * TILE_WIDTH + ty) < input_size) {
             s_b[ty][tx] = b[(i * TILE_WIDTH + ty) * input_size + col];
-        } else {
-            s_b[ty][tx] = 0.0f;
         }
-
-        __syncthreads();
+        __syncthreads(); // barrier
 
         for (int j = 0; j<TILE_WIDTH; j++) {
-            sum += s_a[ty][j] * s_b[j][tx];
+            sum += s_a[ty][j] * s_b[j][tx]; // get tile sum for block
         }
-
-        __syncthreads();
+        __syncthreads(); // barrier
     }
 
     if (row < input_size && col < input_size) {
-        output[row * input_size + col] = alpha * sum + beta * c[row * input_size + col];
+        int index = (i + tx) + (j + ty)*input_size;
+        s_c[ty][tx] = c[index];
+        output[index] = alpha * sum + beta * s_c[ty][tx];
     }
 }
 
