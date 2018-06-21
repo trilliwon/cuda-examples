@@ -41,25 +41,25 @@ __global__ void gemm(float *a, float *b, float *c, const float alpha, const floa
 
     for (int i = 0; i < ceilf(input_size/TILE_WIDTH) + 1; i++) {
 
-        s_a[ty][tx] = 0.0f;
+        s_a[ty][tx] = 0.0f; // to ignore uneffected values
 
+        // boundary check
         if (row < input_size && (TILE_WIDTH * i + tx) < input_size) {
             s_a[ty][tx] = a[row * input_size + TILE_WIDTH * i + tx];
         }
 
-        s_b[ty][tx] = 0.0f;
+        s_b[ty][tx] = 0.0f; // to ignore uneffected values
 
+        // boundary check
         if (col < input_size && (i * TILE_WIDTH + ty) < input_size) {
             s_b[ty][tx] = b[(i * TILE_WIDTH + ty) * input_size + col];
         }
-
-        __syncthreads();
+        __syncthreads(); // barrier
 
         for (int j = 0; j<TILE_WIDTH; j++) {
-            sum += s_a[ty][j] * s_b[j][tx];
+            sum += s_a[ty][j] * s_b[j][tx]; // get tile sum for block
         }
-
-        __syncthreads();
+        __syncthreads(); // barrier
     }
 
     if (row < input_size && col < input_size) {
