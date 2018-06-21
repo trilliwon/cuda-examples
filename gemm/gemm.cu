@@ -39,18 +39,21 @@ __global__ void gemm(float *a, float *b, float *c, const float alpha, const floa
 
     float sum = 0.0f;
 
-    for (int i = 0; i < ceilf(input_size/TILE_WIDTH) + 1; i++) {
+    int loopcount = ceilf(input_size/TILE_WIDTH) + 1;
+    for (int i = 0; i < loopcount; i++) {
 
         s_a[ty][tx] = 0.0f;
+        int itx = TILE_WIDTH * i + tx;
 
-        if (row < input_size && (TILE_WIDTH * i + tx) < input_size) {
-            s_a[ty][tx] = a[row * input_size + TILE_WIDTH * i + tx];
+        if (row < input_size && itx < input_size) {
+            s_a[ty][tx] = a[row * input_size + itx];
         }
 
         s_b[ty][tx] = 0.0f;
+        int ity = (i * TILE_WIDTH + ty);
 
-        if (col < input_size && (i * TILE_WIDTH + ty) < input_size) {
-            s_b[ty][tx] = b[(i * TILE_WIDTH + ty) * input_size + col];
+        if (col < input_size && ity < input_size) {
+            s_b[ty][tx] = b[ity * input_size + col];
         }
 
         __syncthreads();
