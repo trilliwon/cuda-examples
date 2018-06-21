@@ -18,7 +18,53 @@
  
  using namespace std;
 
-__global__ void gemm(float *a, float *b, float *c, const float alpha, const float beta, float *output, const int input_size) {
+__global__ void gemm_origin(float *a, float *b, float *c, const float alpha, const float beta, float *output, const int input_size) {
+    // a, b, c : input matrix address
+    // alpha, beta : input constant
+    // output : output buffer address
+    // input_size : width, height of input matrix
+    // all input, output matrices are vectorized
+
+    int tx = threadIdx.x, ty = threadIdx.y;
+    int bx = blockIdx.x,  by = blockIdx.y;
+
+    int row = by * blockDim.y + ty;
+    int col = bx * blockDim.x + tx;
+
+    // allocate 2D tiles in __shared__ memory
+    __shared__ float s_a[TILE_WIDTH][TILE_WIDTH];
+    __shared__ float s_b[TILE_WIDTH][TILE_WIDTH];
+
+    float sum = 0.0f;
+
+    for (int i = 0; i < ceilf(input_size/TILE_WIDTH) + 1; i++) {
+
+        s_a[ty][tx] = 0.0f;
+
+        if (row < input_size && (TILE_WIDTH * i + tx) < input_size) {
+            s_a[ty][tx] = a[row * input_size + TILE_WIDTH * i + tx];
+        }
+
+        s_b[ty][tx] = 0.0f;
+
+        if (col < input_size && (i * TILE_WIDTH + ty) < input_size) {
+            s_b[ty][tx] = b[(i * TILE_WIDTH + ty) * input_size + col];
+        }
+
+        __syncthreads();
+
+        for (int j = 0; j<TILE_WIDTH; j++) {
+            sum += s_a[ty][j] * s_b[j][tx];
+        }
+
+        __syncthreads();
+    }
+
+    if (row < input_size && col < input_size) {
+        output[row * input_size + col] = alpha * sum + beta * c[row * input_size + col];
+    }
+}
+ __global__ void gemm(float *a, float *b, float *c, const float alpha, const float beta, float *output, const int input_size) {
     // a, b, c : input matrix address
     // alpha, beta : input constant
     // output : output buffer address
@@ -159,7 +205,7 @@ int main(int argc, char **argv) {
     timer.Start();
     // launch CUDA kernels
     // First launch gemm kernel
-    gemm<<<num_of_blocks, block_size>>>(dev_mem_a, dev_mem_b, dev_mem_c, alpha, beta, gemm_output, input_size);
+    gemm_origin<<<num_of_blocks, block_size>>>(dev_mem_a, dev_mem_b, dev_mem_c, alpha, beta, gemm_output, input_size);
     timer.Stop();
 
     cudaDeviceSynchronize();
