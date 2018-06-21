@@ -63,8 +63,9 @@ __global__ void gemm(float *a, float *b, float *c, const float alpha, const floa
     }
 
     if (row < input_size && col < input_size) {
-        s_c[ty][tx] = c[(i + tx) + (j + ty)*input_size];
-        output[(i + tx) + (j + ty)*input_size] = alpha * sum + beta * s_c[ty][tx];
+        int index = (i + tx) + (j + ty)*input_size;
+        s_c[ty][tx] = c[index];
+        output[index] = alpha * sum + beta * s_c[ty][tx];
     }
 }
 
