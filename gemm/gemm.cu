@@ -63,7 +63,6 @@ __global__ void gemm(float *a, float *b, float *c, const float alpha, const floa
     }
 
     if (row < input_size && col < input_size) {
-
         s_c[ty][tx] =  alpha * sum + beta * c[(i + tx) + (j + ty)*input_size];
         __syncthreads();
         output[(i + tx) + (j + ty)*input_size] = s_c[ty][tx];
