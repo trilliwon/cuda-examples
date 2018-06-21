@@ -61,7 +61,16 @@
     }
 
     if (row < input_size && col < input_size) {
-        output[row * input_size + col] = alpha * sum + beta * c[row * input_size + col];
+
+        int i = blockIdx.x * TILE_WIDTH, j = blockIdx.y * TILE_WIDTH;
+
+        __shared__ float s_c[TILE_WIDTH][TILE_WIDTH];
+
+        s_c[ty][tx] =  alpha * sum + beta * c[(i + tx) + (j + y)*input_size];
+        
+        __syncthreads();
+
+        output[(i + tx) + (j + y)*input_size] = s_c[ty][tx];
     }
 }
 
