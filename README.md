@@ -12,6 +12,10 @@
 - [Shared memory](https://docs.nvidia.com/cuda/cuda-c-programming-guide/#shared-memory)
 - [Sorting algorithms](http://mgarland.org/files/papers/gpusort-ipdps09.pdf)
 
+# YouTube Channel
+
+- [Intro to Parallel Programming CUDA - Udacity 458](https://www.youtube.com/playlist?list=PLGvfHSgImk4aweyWlhBXNF6XISY3um82_)
+
 
 # Technical Support: CUDA Setup
 
